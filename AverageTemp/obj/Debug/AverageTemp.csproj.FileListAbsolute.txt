@@ -1,0 +1,12 @@
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\bin\Debug\AverageTemp.exe.config
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\bin\Debug\AverageTemp.exe
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\bin\Debug\AverageTemp.pdb
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\obj\Debug\AverageTemp.csprojAssemblyReference.cache
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\obj\Debug\AverageTemp.csproj.CoreCompileInputs.cache
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\obj\Debug\AverageTemp.exe
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\obj\Debug\AverageTemp.pdb
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\bin\Debug\RestSharp.dll
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\bin\Debug\RestSharp.xml
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\obj\Debug\AverageTemp.csproj.CopyComplete
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\bin\Debug\Newtonsoft.Json.dll
+C:\Users\omer6\source\repos\AverageTemp\AverageTemp\bin\Debug\Newtonsoft.Json.xml
