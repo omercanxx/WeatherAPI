@@ -11,84 +11,100 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 
-namespace TaylorSwift
+namespace WeatherAPI
 {
-    public class Model
-    {
-        public Coord Coord { get; set; }
-        public List<Weather> Weather { get; set; }
-        public string Base { get; set; }
-        public Main Main { get; set; }
-        public double Visibility { get; set; }
-        public Wind Wind { get; set; }
-        public Rain Rain { get; set; }
-        public Cloud Cloud { get; set; }
-        public string Dt { get; set; }
-        public Sys Sys { get; set; }
-        public int Timezone { get; set; }
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public int Cod { get; set; }
-    }
-
-    public class Sys
-    {
-        public string Country { get; set; }
-        public string Sunrise { get; set; }
-        public string Sunset { get; set; }
-    }
-
-    public class Cloud
-    {
-        public string All { get; set; }
-    }
-
-    public class Coord
-    {
-        public double Lon { get; set; }
-        public double Lat { get; set; }
-    }
     public class Weather
     {
-        public int Id { get; set; }
-        public string Main { get; set; }
-        public string Description { get; set; }
-        public string Icon { get; set; }
-    }
-    public class Main
-    {
-        public double Temp { get; set; }
-        public double Feels_like { get; set; }
-        public double Temp_min { get; set; }
-        public double Temp_max { get; set; }
-        public double Pressure { get; set; }
-        public double Humidity { get; set; }
+        public int id { get; set; }
+        public string main { get; set; }
+        public string description { get; set; }
+        public string icon { get; set; }
     }
 
-    public class Wind
+    public class Current
     {
-        public double Speed { get; set; }
-        public double Deg { get; set; }
+        public int dt { get; set; }
+        public int sunrise { get; set; }
+        public int sunset { get; set; }
+        public double temp { get; set; }
+        public double feels_like { get; set; }
+        public int pressure { get; set; }
+        public int humidity { get; set; }
+        public double dew_point { get; set; }
+        public double uvi { get; set; }
+        public int clouds { get; set; }
+        public int visibility { get; set; }
+        public double wind_speed { get; set; }
+        public int wind_deg { get; set; }
+        public List<Weather> weather { get; set; }
     }
-    public class Rain
+
+    public class Minutely
     {
-        public string Perhour { get; set; }
+        public int dt { get; set; }
+        public int precipitation { get; set; }
     }
+
+    public class Weather2
+    {
+        public int id { get; set; }
+        public string main { get; set; }
+        public string description { get; set; }
+        public string icon { get; set; }
+    }
+
+    public class Hourly
+    {
+        public int dt { get; set; }
+        public double temp { get; set; }
+        public double feels_like { get; set; }
+        public int pressure { get; set; }
+        public int humidity { get; set; }
+        public double dew_point { get; set; }
+        public int clouds { get; set; }
+        public int visibility { get; set; }
+        public double wind_speed { get; set; }
+        public int wind_deg { get; set; }
+        public List<Weather2> weather { get; set; }
+        public int pop { get; set; }
+    }
+
+    public class Root
+    {
+        public double lat { get; set; }
+        public double lon { get; set; }
+        public string timezone { get; set; }
+        public int timezone_offset { get; set; }
+        public Current current { get; set; }
+        public List<Minutely> minutely { get; set; }
+        public List<Hourly> hourly { get; set; }
+    }
+    
     public class Program
     {
         const string APPID = "e9b1b3f8add39dd1f36224533e46c124";
-        static string cityName = "";
-        static string countryName = "";
-        public static void Main()
+        const string latitude = "41.015137";
+        const string longtitude = "28.979530";
+        const string exclude = "daily";
+        const string units = "metric";
+        /*
+         * Temperature is available in Fahrenheit, Celsius and Kelvin units.
+         * Wind speed is available in miles/hour and meter/sec.
+         * For temperature in Fahrenheit and wind speed in miles/hour, use units=imperial
+         * For temperature in Celsius and wind speed in meter/sec, use units=metric
+         * Temperature in Kelvin and wind speed in meter/sec is used by default, so there is no need to use the units parameter in the API call if you want this
+         */
+        static void Main()
         {
-            getWeather();
+            GetWeather();
             Console.ReadLine();
         }
-        static void getWeather()
+        static void GetWeather()
         {
+            double avg = 0, count = 0, sum = 0;
             using (WebClient web = new WebClient())
             {
-                string apiUrl = string.Format("https://api.openweathermap.org/data/2.5/weather?q=Aluthgama&appid={0}",APPID);
+                string apiUrl = string.Format("https://api.openweathermap.org/data/2.5/onecall?lat={0}&lon={1}&exclude={2}&appid={3}&units={4}", latitude, longtitude, exclude, APPID, units);
 
                 Uri url = new Uri(apiUrl);
                 WebClient client = new WebClient();
@@ -97,15 +113,20 @@ namespace TaylorSwift
 
                 string json = web.DownloadString(url);
 
-                var result = JsonConvert.DeserializeObject<Model>(json);
-
-                Model output = result;
-                cityName = string.Format("{0}", output.Name);
-                countryName = string.Format("{0}", output.Sys.Country);
-
-                Console.WriteLine("country name -> {0} \ncity name -> {1}", cityName, countryName);
-
+                Root result = JsonConvert.DeserializeObject<Root>(json);
+                Console.WriteLine("**********{0}**********\nFeels like=>{1}",result.timezone,result.current.feels_like);
+                foreach(var item in result.hourly)
+                {
+                    sum += item.temp;
+                    count++;
+                    avg = sum/count;
+                    Console.WriteLine("**********\nHour {0}\nTemp=>{1}F\tsum=>{2}F\tavg=>{3}F", count, item.temp, sum, avg);
+                }
             }
+        }
+        static double FahrenheitToCelcius(double fahrenheit)
+        {
+            return (fahrenheit-32)*0.5556;
         }
     }
 }
